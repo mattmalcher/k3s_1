@@ -1,0 +1,4 @@
+mirrors:
+  local_reg_1:
+    endpoint:
+      - "http://192.168.56.1:5000"

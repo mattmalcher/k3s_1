@@ -1,0 +1,21 @@
+# put binary somewhere on path & make executable
+- name: Copy k3s binary
+  ansible.builtin.copy:
+    src:  ../resources/k3s
+    dest: /usr/local/bin/k3s
+    mode: 0744
+    owner: vagrant
+
+- name: Copy registries.yml
+  ansible.builtin.copy:
+    src:  ../resources/registries.yaml
+    dest: /etc/rancher/k3s/
+    mode: 0744
+    owner: vagrant
+
+- name: Copy config.yml
+  ansible.builtin.copy:
+    src:  ../resources/config.yaml
+    dest: /etc/rancher/k3s/
+    mode: 0744
+    owner: vagrant

@@ -1,0 +1,23 @@
+---
+# playbook to set up docker swarm on rockylinux machines
+
+# to run & set up all machines
+- hosts: k3s_cluster
+  gather_facts: yes
+  become: yes  
+  roles:
+    - role: k3s/prep
+    - role: nfs_user
+      vars:
+      mountpoint: /mnt/efs
+      mynfs: 192.168.56.1:/k3s_1
+
+- hosts: master
+  become: yes
+  roles:
+    - role: k3s/master
+
+- hosts: node
+  become: yes
+  roles:
+    - role: k3s/node

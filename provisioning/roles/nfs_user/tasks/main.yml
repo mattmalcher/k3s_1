@@ -1,0 +1,22 @@
+- name: check mountpoint exist
+  ansible.builtin.file:
+    path: "{{ mountpoint }}"
+    state: directory
+    mode: "{{ permission }}"
+    owner: vagrant
+#    group: root
+
+- name: install nfs client
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+
+# https://docs.ansible.com/ansible/latest/collections/ansible/posix/mount_module.html
+- name: mount network share
+  ansible.posix.mount:
+    src: "{{ mynfs }}"
+    path: "{{ mountpoint }}"
+    fstype: nfs
+    opts: "{{ myopts }}"
+    state: mounted
+
