@@ -19,6 +19,38 @@ http://192.168.56.31:30777/#!/wizard
 
 # Problems
 
+## Set up NFS for the swarm on the vagrant/ansible host
+
+I want NFS to be accessible from both the host & the swarm for convenience.
+
+https://linuxize.com/post/how-to-install-and-configure-an-nfs-server-on-ubuntu-20-04/
+
+This makes an nfs folder at /srv/nfs4/k3s_1 and allows the virtualbox subnet on 192.168.56.x to access it.
+
+`no_root_squash` is a security issue as a remote root user can then gain root on the NFS server. 
+
+What does EFS do here? (EFS Uses no_root_squash!)
+
+```
+sudo apt update
+sudo apt install nfs-kernel-server
+sudo mkdir -p /srv/nfs4/k3s_1
+sudo chown 1000 /srv/nfs4/k3s_1
+sudo bash -c 'echo "/srv/nfs4    192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check,crossmnt,fsid=0)" >> /etc/exports'
+sudo bash -c 'echo "/srv/nfs4/k3s_1    192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)" >> /etc/exports'
+sudo exportfs -ar
+```
+
+This should result in an exports file that looks like:
+
+```
+/srv/nfs4         192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check,crossmnt,fsid=0)
+/srv/nfs4/k3s_1    192.168.56.0/24(rw,sync,no_root_squash,no_subtree_check)
+```
+
+Note - vagrant does have some functionality to automatically set up NFS for you...
+
+
 ## Issues with agent joining
 
 Was getting errors like the following on the agent.
