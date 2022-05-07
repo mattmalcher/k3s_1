@@ -4,3 +4,4 @@
 resources/k3s
 resources/k3s-airgap-images-amd64.tar.gz
 resources/k3s-images.txt
+.vscode
