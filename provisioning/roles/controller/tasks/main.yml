@@ -24,3 +24,17 @@
     src: /usr/local/bin/k3s
     dest: /usr/local/bin/crictl
     state: link
+
+
+# copy helm installer from host.
+- name: Copy file with owner and permissions
+  ansible.posix.synchronize:
+    src: ../resources/helm
+    dest: ~{{ ansible_user }}/
+
+- name: Install Helm. cd to helm & run script. Wont run if /usr/local/bin/helm exists
+  become_user: root
+  ansible.builtin.shell: ./helm_install.sh
+  args:
+    chdir: /home/{{ ansible_user }}/helm/
+    creates: /usr/local/bin/helm
