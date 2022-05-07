@@ -77,3 +77,11 @@
     src: /usr/local/bin/k3s
     dest: /usr/local/bin/crictl
     state: link
+
+- name: Copy config file to NFS Share
+  copy:
+    src: ~{{ ansible_user }}/.kube/config
+    dest: /mnt/efs/config
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+    mode: "u=rw,g=,o="

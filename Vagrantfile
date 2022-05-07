@@ -2,8 +2,10 @@
 # vi: set ft=ruby :
 
 nodes = [
-  { :hostname => 'k3-srv-1', :ip => '192.168.56.30', :ram => '2000', :cpus => '2' }, # swarm leader, portainer
-  { :hostname => 'k3-ag-1', :ip => '192.168.56.31', :ram => '2000', :cpus => '2' }#, # freeipa
+  { :hostname => 'k3-control',  :ip => '192.168.56.30', :ram => '1000', :cpus => '1' }, # Control Node
+  { :hostname => 'k3-master-1', :ip => '192.168.56.31', :ram => '2000', :cpus => '2' }, # Master
+  { :hostname => 'k3-worker-1', :ip => '192.168.56.32', :ram => '2000', :cpus => '2' }, # Worker 1
+  { :hostname => 'k3-worker-2', :ip => '192.168.56.33', :ram => '2000', :cpus => '2' }  # Worker 2
 ]
 
 
@@ -25,15 +27,15 @@ Vagrant.configure("2") do |config|
       nodeconfig.ssh.insert_key = FALSE
       
       nodeconfig.vm.provider "virtualbox" do |vb|
-		vb.memory = memory
-		vb.cpus = cpus
+        vb.memory = memory
+        vb.cpus = cpus
       end
       
 
-      if node[:hostname] == "k3-srv-1"
+      if node[:hostname] == "k3-master-1"
 
             # Kubernetes API Access for server
-            nodeconfig.vm.network "forwarded_port", guest: 6443, host: 6443
+            # nodeconfig.vm.network "forwarded_port", guest: 6443, host: 6443
 
             # forward port range used for k3s services to host - probably want to figure out how to use traefik
             for p in 30000..30100
@@ -42,7 +44,7 @@ Vagrant.configure("2") do |config|
       end 
 
       # parallel ansible trick - runs when you hit the last vm, but scoped to all
-      if node[:hostname] == 'k3-ag-1'
+      if node[:hostname] == 'k3-worker-2'
 	      nodeconfig.vm.provision "ansible" do |ansible|   
             
             # Disable default limit to connect to all the machines        
