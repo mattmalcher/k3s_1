@@ -19,3 +19,19 @@
     dest: /etc/rancher/k3s/
     mode: 0744
     owner: vagrant
+
+- name: Define docker.service location 
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    # double quote to allow escaping, and leading space stops ansible treating this as json
+    # https://github.com/ansible/ansible-modules-core/issues/2836#issuecomment-172649358
+    line: "{{registry_ip}} docker.service" 
+    create: yes
+
+- name: Allow insecure registry
+  ansible.builtin.lineinfile:
+    path: /etc/docker/daemon.json
+    # double quote to allow escaping, and leading space stops ansible treating this as json
+    # https://github.com/ansible/ansible-modules-core/issues/2836#issuecomment-172649358
+    line: " { \"insecure-registries\" : [\"docker.service:5000\"] }" 
+    create: yes

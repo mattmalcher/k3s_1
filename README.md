@@ -60,21 +60,6 @@ Turns out, the agent is unable to join unless you specify `extra_server_args: "-
 See: https://github.com/alexellis/k3sup/issues/306#issuecomment-1059986048
 
 
-## Getting kubectl to work on host
-
-Pretty easy to set up `kubectl` to use this new cluster:
-
-Copy the config out of the k3s.yaml to the nfs share.
-```
-vagrant ssh k3-srv-1
-sudo cat /etc/rancher/k3s/k3s.yaml > /mnt/efs/config
-```
-
-Then on host
-```
-cp /srv/nfs4/k3s/config ~/.kube/config
-```
-
 
 # Refs
 https://blog.flant.com/small-local-kubernetes-comparison/
@@ -106,3 +91,10 @@ Get some applications deployed!
 
 
 * Get a reverse proxy/ingress working
+
+Figure out how to do identity management & single sign on
+
+# Questions
+
+- Is FreeIPA running in-cluster for identity provider things a good option
+- What is the equivalent of the docker swarm thing where every service is available from any node? Is it Istio?

@@ -7,6 +7,9 @@
   become: yes  
   roles:
     - role: k3s/prep
+      vars:
+      registry_ip: 192.168.56.1
+      
     - role: nfs_user
       vars:
       mountpoint: /mnt/efs
